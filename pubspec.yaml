@@ -42,6 +42,9 @@ dependencies:
   http_cache_hive_store: ^5.0.2
   hive_flutter: ^1.1.0
   path_provider: ^2.1.5
+  flutter_bloc: ^9.1.1
+  shared_preferences: ^2.5.4
+  flutter_secure_storage: ^10.0.0
 
 dev_dependencies:
   flutter_test:

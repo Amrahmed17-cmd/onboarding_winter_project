@@ -10,9 +10,9 @@ HiveCacheStore? cacheStore;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Directory directory = await getApplicationDocumentsDirectory();
-  cacheStore = HiveCacheStore(directory.path);
-  debugPrint(cacheStore?.hiveBoxName);
-  setupDependencies();
+  await setupDependencies();
+  // Directory directory = await getApplicationDocumentsDirectory();
+  // cacheStore = HiveCacheStore(directory.path);
+  // debugPrint(cacheStore?.hiveBoxName);
   runApp(const OnboardingApp());
 }

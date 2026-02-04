@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onboarding_winter_project/core/common_widgets/app_text_field.dart';
 import 'package:onboarding_winter_project/core/di/module.dart';
-import 'package:onboarding_winter_project/core/network/api_services.dart';
 import 'package:onboarding_winter_project/core/resources/app_button_styles.dart';
 import 'package:onboarding_winter_project/core/resources/app_images.dart';
 import 'package:onboarding_winter_project/core/resources/app_text_styles.dart';
+import 'package:onboarding_winter_project/core/router/routes.dart';
+import 'package:onboarding_winter_project/core/utils/extensions/context_extension.dart';
 import 'package:onboarding_winter_project/core/utils/validation_util.dart';
-import 'package:onboarding_winter_project/features/auth/data/data_sources/remote/remote_data_source.dart';
-import 'package:onboarding_winter_project/features/auth/data/repository/auth_repository_impl.dart';
-import 'package:onboarding_winter_project/features/auth/domain/use_cases/login_use_case.dart';
-import 'package:onboarding_winter_project/features/auth/presentation/provider/auth_provider.dart';
+import 'package:onboarding_winter_project/features/auth/presentation/auth_cubit/auth_cubit.dart';
+import 'package:onboarding_winter_project/features/auth/presentation/auth_cubit/auth_state.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -60,17 +60,39 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           SizedBox(height: 50),
-          ElevatedButton(
-            style: AppButtonStyles.primaryButtonStyle,
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                getIt<AuthProvider>().login(
-                  _usernameController.text,
-                  _passwordController.text,
+          BlocConsumer<AuthCubit, AuthState>(
+            builder: (context, state) {
+              if (state is AuthLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return ElevatedButton(
+                  style: AppButtonStyles.primaryButtonStyle,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<AuthCubit>().login(
+                        _usernameController.text,
+                        _passwordController.text,
+                      );
+                    }
+                  },
+                  child: Text(
+                    'Login',
+                    style: AppTextStyles.whiteColor20SemiBold,
+                  ),
                 );
               }
             },
-            child: Text('Login', style: AppTextStyles.whiteColor20SemiBold),
+            listenWhen: (previous, current) =>
+                current is AuthSuccessState || current is AuthErrorState,
+            listener: (context, state) {
+              if (state is AuthSuccessState) {
+                context.navigateReplacement(Routes.home);
+              } else {
+                context.showSnackBar(
+                  (state as AuthErrorState).message ?? 'Something went wrong',
+                );
+              }
+            },
           ),
         ],
       ),
