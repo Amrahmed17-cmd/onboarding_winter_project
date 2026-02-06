@@ -34,4 +34,13 @@ class SharedPrefsHelper {
     String userString = json.encode(userMap);
     await _sharedPreferences.setString(_USER_DATA, userString);
   }
+
+  Future<void> clearAll() async {
+    await _sharedPreferences.clear();
+  }
+
+  Future<void> clearAuthData() async {
+    await _sharedPreferences.remove(_LOGGED_IN);
+    await _sharedPreferences.remove(_USER_DATA);
+  }
 }

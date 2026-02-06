@@ -24,6 +24,8 @@ import 'package:onboarding_winter_project/features/splash/domain/use_cases/is_vi
 import 'package:onboarding_winter_project/features/splash/presentation/splash_cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onboarding_winter_project/features/auth/data/data_sources/local/auth_local_data_source.dart';
+import 'package:onboarding_winter_project/features/home/presentation/home_cubit/home_cubit.dart';
+import 'package:onboarding_winter_project/features/home/services/home_service.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -73,4 +75,10 @@ Future<void> setupDependencies() async {
   getIt.registerFactory<OnboardingCubit>(
     () => OnboardingCubit(getIt(), getIt()),
   );
+
+  //home
+  getIt.registerLazySingleton<HomeService>(
+    () => HomeService(DioConfig.getDio()),
+  );
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt()));
 }

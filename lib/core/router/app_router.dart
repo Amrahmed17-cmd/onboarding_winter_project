@@ -4,6 +4,7 @@ import 'package:onboarding_winter_project/core/di/module.dart';
 import 'package:onboarding_winter_project/core/router/routes.dart';
 import 'package:onboarding_winter_project/features/auth/presentation/auth_cubit/auth_cubit.dart';
 import 'package:onboarding_winter_project/features/auth/presentation/screens/login_screen.dart';
+import 'package:onboarding_winter_project/features/home/presentation/home_cubit/home_cubit.dart';
 import 'package:onboarding_winter_project/features/home/presentation/screens/main_screen.dart';
 import 'package:onboarding_winter_project/features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
 import 'package:onboarding_winter_project/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -37,7 +38,12 @@ class AppRouter {
           ),
         );
       case Routes.home:
-        return MaterialPageRoute(builder: (context) => MainScreen());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider<HomeCubit>(
+            create: (context) => getIt<HomeCubit>(),
+            child: MainScreen(),
+          ),
+        );
       default:
         return undefinedRoute();
     }
